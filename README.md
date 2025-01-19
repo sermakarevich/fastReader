@@ -24,6 +24,6 @@ python src/run.py --URL https://www.zenml.io/blog/production-llm-security-real-w
 ```
 
 There are three types of documents that can be processed:
-- youtube videos: youtube - https://www.youtube.com/watch?v=gF341XMN8cY
-- pdfs: pdf - https://arxiv.org/pdf/2501.04227
-- text: text - https://www.zenml.io/blog/production-llm-security-real-world-strategies-from-industry-leaders
+- youtube videos: `youtube` - https://www.youtube.com/watch?v=gF341XMN8cY
+- pdfs: `pdf` - https://arxiv.org/pdf/2501.04227
+- text: `text` - https://www.zenml.io/blog/production-llm-security-real-world-strategies-from-industry-leaders
