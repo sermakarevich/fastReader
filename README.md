@@ -1,6 +1,7 @@
 # FastReader
 
 FastReader is an application designed to process and summarize documents efficiently. It uses language models to compress text and generate both short and extensive summaries.
+![alt text](assets/graph.png)
 
 ## Installation
 
