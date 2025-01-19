@@ -1,41 +1,15 @@
 # FastReader
 
-FastReader is an application designed to process and summarize documents efficiently. It uses language models to compress text and generate both short and extensive summaries.
+FastReader is an application designed to process and summarize documents. Text compression is happening in an iterative manner, enabling fastReader to compress even huge documents or books into a few sentences.
 ![alt text](assets/graph.png)
 
 ## Installation
 
-To set up the environment and install dependencies, follow these steps:
+To set up the environment:
 
-1. **Create the environment:**
-    ```sh
-    make env-create
-    ```
-
-2. **Update the environment:**
-    ```sh
-    make env-update
-    ```
-
-3. **Remove the environment:**
-    ```sh
-    make env-remove
-    ```
-
-4. **Export the environment:**
-    ```sh
-    make env-export
-    ```
-
-5. **Install Jupyter kernel:**
-    ```sh
-    make jupyter-kernel
-    ```
-
-6. **Format the code:**
-    ```sh
-    make format
-    ```
+```sh
+make env-create
+```
 
 ## Ollama Installation
 
@@ -48,3 +22,8 @@ To run the application, use the following command:
 ```sh
 python src/run.py --URL https://www.zenml.io/blog/production-llm-security-real-world-strategies-from-industry-leaders --document_type text
 ```
+
+There are three types of documents that can be processed:
+- youtube videos: youtube - https://www.youtube.com/watch?v=gF341XMN8cY
+- pdfs: pdf - https://arxiv.org/pdf/2501.04227
+- text: text - https://www.zenml.io/blog/production-llm-security-real-world-strategies-from-industry-leaders
