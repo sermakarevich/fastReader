@@ -17,29 +17,50 @@ class YouTubeVideoLoader:
         transcript = YouTubeTranscriptApi.get_transcript(self.video_id)
         text = " ".join([line["text"] for line in transcript])
         return [Document(text)]
+    
+
+class LocalDocumentLoader:
+    def __init__(self, URL: str):
+        self.URL = URL
+
+    def load(self) -> Document:
+        with open(self.URL, "r") as f:
+            text = f.read()
+        return [Document(text)]
 
 
 class DOCUMENT_TYPES:
     PDF = "pdf"
     TEXT = "text"
     YOUTUBE = "youtube"
+    LOCAL = "local"
 
 
 DOCUMENT_TO_LOADER = {
     DOCUMENT_TYPES.PDF: PDFMinerLoader,
     DOCUMENT_TYPES.TEXT: WebBaseLoader,
     DOCUMENT_TYPES.YOUTUBE: YouTubeVideoLoader,
+    DOCUMENT_TYPES.LOCAL: LocalDocumentLoader,
 }
 
 
 def text_extraction(state: BaseModel) -> dict:
     __start = time.time()
+    logger.info("Text extraction started")
 
-    loader = DOCUMENT_TO_LOADER[state.document_type]
+    text = ""
+    
+    for document_type, URL in zip(state.document_type, state.URL):
 
-    documents = loader(state.URL).load()
-    text = documents[0].page_content
-    text = "\n".join([line for line in text.split("\n") if line.strip() != ""])
+        loader = DOCUMENT_TO_LOADER[document_type]
+
+        documents = loader(URL).load()
+        page_content = documents[0].page_content
+        if len(text) > 0:
+            text += "\n\n"
+        text += "\n".join([line for line in page_content.split("\n") if line.strip() != ""])
+        
+        logger.info(f"Text extraction for URL {URL} took {int(time.time() - __start)} seconds. Text length: {len(text)}")
 
     logger.info(f"Text extraction took {int(time.time() - __start)} seconds. Text length: {len(text)}")
 

@@ -1,12 +1,16 @@
 import argparse
 
 
+def __comma_separated_strings(string):
+    return string.split(",")
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Process document for summarization.")
 
-    parser.add_argument("--URL", type=str, required=True, help="The URL of the document")
+    parser.add_argument("--URL", type=__comma_separated_strings, required=True, help="The URL of the document")
     parser.add_argument(
-        "--document_type", type=str, required=True, choices=["pdf", "text", "youtube"], help="The type of the document"
+        "--document_type", type=__comma_separated_strings, required=True, choices=["pdf", "text", "youtube"], help="The type of the document"
     )
     parser.add_argument("--model_class", type=str, default="ollama", help="The class of the model used")
     parser.add_argument("--model_name", type=str, default="phi4", help="The name of the model used")

@@ -13,15 +13,15 @@ logger = logging.getLogger(__name__)
 MODEL_CLASS_TO_CLASS_NAME = {"ollama": ChatOllama, "openai": ChatOpenAI}
 
 
-def llm_short_summary(state: BaseModel) -> dict:
+def llm_medium_summary(state: BaseModel) -> dict:
     __start = time.time()
-    logger.info(f"Short summary started")
+    logger.info("Medium summary started")
 
     llm = MODEL_CLASS_TO_CLASS_NAME[state.model_class](model=state.model_name)
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "Give 3 short sentences summary of the `Content` as a single paragraph. "),
+            ("system", "Give short summary of the `Content` as a single paragraph. "),
             ("human", "`Content`:\n```{paragraph}\n```"),
         ]
     )
@@ -29,6 +29,6 @@ def llm_short_summary(state: BaseModel) -> dict:
 
     out = safe_invoke(chain, {"paragraph": state.compressed_text})
 
-    logger.info(f"Short summary took {int(time.time() - __start)} seconds. Short summary length: {len(out.content)}")
+    logger.info(f"Medium summary took {int(time.time() - __start)} seconds. Medium summary length: {len(out.content)}")
 
-    return {"short_summary": out.content}
+    return {"medium_summary": out.content}

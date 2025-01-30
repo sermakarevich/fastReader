@@ -4,7 +4,6 @@ channels:
   - defaults
 dependencies:
   - python=3.11
-  - pip
   - pip:
     - bs4
     - langchain
@@ -12,5 +11,6 @@ dependencies:
     - langchain_ollama
     - langchain_openai
     - langchain_community
+    - pdfminer.six
     - ruff
     - youtube_transcript_api

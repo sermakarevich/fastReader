@@ -1,6 +1,9 @@
 import logging
+import os
 import time
+from concurrent.futures import ThreadPoolExecutor
 
+from app.utils import safe_invoke
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
@@ -13,6 +16,7 @@ MODEL_CLASS_TO_CLASS_NAME = {"ollama": ChatOllama, "openai": ChatOpenAI}
 
 def llm_compress_text(state: BaseModel) -> dict:
     __start = time.time()
+    logger.info(f"Text compression started")
 
     logger.info(f"Text compression: Iteration: {state.iteration}, Chunk size: {state.chunk_size}")
 
@@ -25,9 +29,15 @@ def llm_compress_text(state: BaseModel) -> dict:
         ]
     )
     chain = prompt | llm
-
-    out = chain.batch([{"paragraph": paragraph.page_content} for paragraph in state.chunks])
-    compressed_text = "\n".join([i.content for i in out])
+    
+    with ThreadPoolExecutor(max_workers=os.cpu_count() * 4) as executor:
+        futures = [executor.submit(safe_invoke, chain, {"paragraph": paragraph.page_content}) for paragraph in state.chunks]
+        out = [future.result() for future in futures]
+        
+    out_split = [i.content.split("</think>") for i in out]
+    out = [i[1] if len(i) > 1 else i[0] for i in out_split]
+    out = [" ".join(i.split(" ")) for i in out]
+    compressed_text = "\n".join(out)
 
     iteration = state.iteration + 1
     chunk_size = int(state.chunk_size * state.chunk_size_decay)

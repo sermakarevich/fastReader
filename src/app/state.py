@@ -1,15 +1,19 @@
+from typing import List
 from pydantic import BaseModel, Field
 
 
 class State(BaseModel):
-    URL: str = Field(None, description="The URL of the document")
-    document_type: str = Field(None, description="The type of the document")
+    URL: List[str] = Field(None, description="The URL of the document")
+    document_type: List[str] = Field(None, description="The type of the document")
     original_text: str = Field(None, description="The original text of the document")
     compressed_text: str = Field(None, description="The compressed text of the document")
     chunks: list = Field(None, description="The list of text chunks")
     compressed_chunk: list = Field(None, description="The list of compressed text chunks")
     short_summary: str = Field(None, description="The short summary of the document")
+    medium_summary: str = Field(None, description="The medium summary of the document")
     extensive_summary: str = Field(None, description="The extensive summary of the document")
+    formatted_summary: str = Field(None, description="The formatted summary of the document")
+    extensive_instructions: str = Field(None, description="The extensive instructions of the document")
 
     model_class: str = Field("ollama", description="The class of the model used")
     model_name: str = Field("phi4", description="The name of the model used")
