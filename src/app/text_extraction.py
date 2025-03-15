@@ -48,6 +48,9 @@ def text_extraction(state: BaseModel) -> dict:
     __start = time.time()
     logger.info("Text extraction started")
 
+    if state.original_text is not None:
+        return {"original_text": state.original_text, "compressed_text": state.original_text}
+
     text = ""
     
     for document_type, URL in zip(state.document_type, state.URL):

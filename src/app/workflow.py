@@ -15,7 +15,7 @@ from app.extensive_instruction import llm_extensive_instruction
 def compression_cycles(state: State):
     if len(state.compressed_text) > state.target_pre_summary_text_length:
         return "split_text"
-    return ["llm_extensive_summary", "llm_short_summary", "llm_medium_summary", "llm_extensive_instruction"]
+    return ["llm_extensive_summary", "llm_short_summary", "llm_medium_summary", "llm_extensive_instruction", "llm_summary_formatter"]
 
 
 def get_workflow():
@@ -34,15 +34,15 @@ def get_workflow():
 
     workflow.add_edge(START, "text_extraction")
     workflow.add_conditional_edges(
-        "text_extraction", compression_cycles, ["llm_extensive_summary", "llm_short_summary", "llm_medium_summary", "split_text", "llm_extensive_instruction"]
+        "text_extraction", compression_cycles, ["llm_short_summary", "llm_extensive_summary", "llm_medium_summary", "split_text", "llm_extensive_instruction", "llm_summary_formatter"]
     )
     workflow.add_edge("split_text", "llm_compress_text")
     workflow.add_conditional_edges(
-        "llm_compress_text", compression_cycles, ["llm_extensive_summary", "llm_short_summary", "llm_medium_summary", "split_text", "llm_extensive_instruction"]
+        "llm_compress_text", compression_cycles, ["llm_short_summary", "llm_extensive_summary", "llm_medium_summary", "split_text", "llm_extensive_instruction", "llm_summary_formatter"]
     )
-    workflow.add_edge("llm_extensive_summary", END)
-    workflow.add_edge("llm_short_summary", "llm_summary_formatter")
+    workflow.add_edge("llm_short_summary", END)
     workflow.add_edge("llm_summary_formatter", END)
+    workflow.add_edge("llm_extensive_summary", END)
     workflow.add_edge("llm_medium_summary", END)
     workflow.add_edge("llm_extensive_instruction", END)
 

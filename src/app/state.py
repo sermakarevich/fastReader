@@ -16,7 +16,9 @@ class State(BaseModel):
     extensive_instructions: str = Field(None, description="The extensive instructions of the document")
 
     model_class: str = Field("ollama", description="The class of the model used")
+    model_class_summary_formatter: str = Field("ollama", description="The class of the model used")
     model_name: str = Field("phi4", description="The name of the model used")
+    model_name_summary_formatter: str = Field("phi4", description="The name of the model used")
 
     chunk_size: int = Field(2000, description="The size of each chunk")
     chunk_size_overlap: int = Field(50, description="The overlap of each chunk")

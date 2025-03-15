@@ -24,13 +24,34 @@ def llm_compress_text(state: BaseModel) -> dict:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            ("system", "Give 1 short sentence summary of the main idea in the `Content` in English."),
+            # ("system", "Give 1 short sentence summary of the main idea in the `Content` in English."),
+            ("system", """
+You are a precision text compression specialist. Your task is to compress any text I provide into 1-2 concise sentences that capture the most essential information.
+
+## Compression Guidelines:
+1. Identify the central claim, conclusion, or main point of the text
+2. Preserve key facts, figures, and relationships that support the main point
+3. Maintain critical context necessary for understanding
+4. Prioritize unique insights over general background information
+5. Remove redundancies, examples, elaborations, and tangential points
+6. Preserve causal relationships and important conditional statements
+7. Keep specialized terminology only when essential to meaning
+
+## Output Format:
+- Provide exactly 1-2 complete sentences
+- Use clear, direct language
+- Maintain factual accuracy
+- Preserve the original tone (formal/informal) when possible
+- Do not use ellipses, bullet points, or other formatting
+
+Always compress the text without adding interpretations, opinions, or information not contained in the original text.
+"""),
             ("human", "`Content`:\n```{paragraph}\n```"),
         ]
     )
     chain = prompt | llm
     
-    with ThreadPoolExecutor(max_workers=os.cpu_count() * 4) as executor:
+    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
         futures = [executor.submit(safe_invoke, chain, {"paragraph": paragraph.page_content}) for paragraph in state.chunks]
         out = [future.result() for future in futures]
         
